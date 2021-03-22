@@ -89,5 +89,20 @@ public class GenoaEntityLoader {
         EntityRegistry.get().register(GenoaPlugin.get(), GenoaEntityTypes.BONE_SHARD, BoneShard::new, 1000, false);
         EntityRegistry.get().register(GenoaPlugin.get(), GenoaEntityTypes.MELON_SEED_PROJECTILE, MelonSeedProjectile::new, 1000, false);
         EntityRegistry.get().register(GenoaPlugin.get(), GenoaEntityTypes.ROTTEN_FLESH_PROJECTILE, RottenFleshProjectile::new, 1000, false);
+
+        /*
+        Missing mobs:
+        "genoa:neutral_dummy",
+        "genoa:albino_rabbit",
+        "genoa:desert_rabbit",
+        "genoa:blotched_rabbit",
+        "genoa:violet_rabbit",
+        "genoa:sable_rabbit",
+        "genoa:toast_rabbit",
+        "genoa:dusky_rabbit",
+        "genoa:salt_and_pepper_rabbit",
+        "genoa:melon_seeds",
+        "genoa:hostile_dummy",
+         */
     }
 }

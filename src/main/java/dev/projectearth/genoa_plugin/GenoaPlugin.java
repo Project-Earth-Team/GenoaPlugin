@@ -3,6 +3,8 @@ package dev.projectearth.genoa_plugin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import dev.projectearth.genoa_plugin.commands.BuildplateCommand;
+import dev.projectearth.genoa_plugin.commands.SummonCommand;
+import dev.projectearth.genoa_plugin.commands.TestEntCommand;
 import dev.projectearth.genoa_plugin.entities.GenoaEntityLoader;
 import dev.projectearth.genoa_plugin.generators.BuildplateGenerator;
 import dev.projectearth.genoa_plugin.utils.Buildplate;
@@ -65,6 +67,8 @@ public class GenoaPlugin implements PluginContainer {
         this.logger.info("Genoa plugin loading...");
         GeneratorRegistry.get().register(BuildplateGenerator.ID, BuildplateGenerator::new, 0);
         CommandRegistry.get().register(this, new BuildplateCommand());
+        CommandRegistry.get().register(this, new TestEntCommand());
+        CommandRegistry.get().register(this, new SummonCommand());
         GenoaEntityLoader.load();
         this.logger.info("Genoa plugin has loaded!");
     }
