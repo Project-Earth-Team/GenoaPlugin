@@ -101,13 +101,16 @@ public class GenoaPlugin implements PluginContainer {
             buildplateLevel.getGameRules().put(GameRules.DO_WEATHER_CYCLE, false);
             buildplateLevel.getGameRules().put(GameRules.SHOW_COORDINATES, true);
 
-            for (BuildplateEntity entity : buildplate.getResult().getBuildplateData().getModel().getEntities()) {
-                Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), buildplateLevel));
-                ent.setPosition(entity.getPosition());
-                ent.setRotation(entity.getRotation().getX(), entity.getRotation().getY());
-                logger.info("Spawning " + ent.getName() + " at " + entity.getPosition() + " for buildplate " + buildplateId);
-                //ent.spawnToAll();
-                buildplateLevel.addEntity(ent);
+
+            if (buildplate.getResult().getBuildplateData().getModel().getEntities() != null) {
+                for (BuildplateEntity entity : buildplate.getResult().getBuildplateData().getModel().getEntities()) {
+                    Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), buildplateLevel));
+                    ent.setPosition(entity.getPosition());
+                    ent.setRotation(entity.getRotation().getX(), entity.getRotation().getY());
+                    logger.info("Spawning " + ent.getName() + " at " + entity.getPosition() + " for buildplate " + buildplateId);
+                    //ent.spawnToAll();
+                    buildplateLevel.addEntity(ent);
+                }
             }
 
             return buildplateLevel;
@@ -122,12 +125,14 @@ public class GenoaPlugin implements PluginContainer {
     public void onJoin(PlayerJoinEvent event) {
         // TODO: Cache if we have spawned the ents
         if (event.getPlayer().getLevel().getGenerator().getClass() == BuildplateGenerator.class) {
-            for (BuildplateEntity entity : buildplates.get(event.getPlayer().getLevel().getId()).getResult().getBuildplateData().getModel().getEntities()) {
-                Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), event.getPlayer().getLevel()));
-                ent.setPosition(entity.getPosition());
-                ent.setRotation(entity.getRotation().getX(), entity.getRotation().getY());
-                logger.info("Spawning " + ent.getName() + " at " + entity.getPosition());
-                ent.spawnToAll();
+            if (buildplates.get(event.getPlayer().getLevel().getId()).getResult().getBuildplateData().getModel().getEntities() != null) {
+                for (BuildplateEntity entity : buildplates.get(event.getPlayer().getLevel().getId()).getResult().getBuildplateData().getModel().getEntities()) {
+                    Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), event.getPlayer().getLevel()));
+                    ent.setPosition(entity.getPosition());
+                    ent.setRotation(entity.getRotation().getX(), entity.getRotation().getY());
+                    logger.info("Spawning " + ent.getName() + " at " + entity.getPosition());
+                    ent.spawnToAll();
+                }
             }
         }
     }
