@@ -3,6 +3,7 @@ package dev.projectearth.genoa_plugin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import dev.projectearth.genoa_plugin.commands.BuildplateCommand;
+import dev.projectearth.genoa_plugin.entities.GenoaEntityLoader;
 import dev.projectearth.genoa_plugin.generators.BuildplateGenerator;
 import dev.projectearth.genoa_plugin.utils.Buildplate;
 import dev.projectearth.genoa_plugin.utils.BuildplateEntity;
@@ -64,9 +65,7 @@ public class GenoaPlugin implements PluginContainer {
         this.logger.info("Genoa plugin loading...");
         GeneratorRegistry.get().register(BuildplateGenerator.ID, BuildplateGenerator::new, 0);
         CommandRegistry.get().register(this, new BuildplateCommand());
-
-        //registerBuildplate("test");
-
+        GenoaEntityLoader.load();
         this.logger.info("Genoa plugin has loaded!");
     }
 
@@ -80,7 +79,8 @@ public class GenoaPlugin implements PluginContainer {
             }
 
             this.logger.info("Loading buildplate " + buildplateId + "...");
-            buildplates.put(buildplateId, OBJECT_MAPPER.readValue(buildplateFile, Buildplate.class));
+            Buildplate buildplate = OBJECT_MAPPER.readValue(buildplateFile, Buildplate.class);
+            buildplates.put(buildplateId, buildplate);
 
             this.logger.info("Creating level for buildplate " + buildplateId + "...");
             Level buildplateLevel = server.loadLevel()
@@ -92,11 +92,19 @@ public class GenoaPlugin implements PluginContainer {
                     .load()
                     .get();
 
+            // We set these because of a bug causing the default game rules not to be applied
             buildplateLevel.getGameRules().put(GameRules.DO_DAYLIGHT_CYCLE, false);
             buildplateLevel.getGameRules().put(GameRules.DO_WEATHER_CYCLE, false);
             buildplateLevel.getGameRules().put(GameRules.SHOW_COORDINATES, true);
 
-            server.setDefaultLevel(buildplateLevel);
+            for (BuildplateEntity entity : buildplate.getResult().getBuildplateData().getModel().getEntities()) {
+                Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), buildplateLevel));
+                ent.setPosition(entity.getPosition());
+                ent.setRotation(entity.getRotation().getX(), entity.getRotation().getY());
+                logger.info("Spawning " + ent.getName() + " at " + entity.getPosition() + " for buildplate " + buildplateId);
+                //ent.spawnToAll();
+                buildplateLevel.addEntity(ent);
+            }
 
             return buildplateLevel;
         } catch (InterruptedException | ExecutionException | IOException e) {
