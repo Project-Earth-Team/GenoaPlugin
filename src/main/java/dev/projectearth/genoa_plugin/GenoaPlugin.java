@@ -17,6 +17,7 @@ import org.cloudburstmc.server.entity.Entity;
 import org.cloudburstmc.server.level.Level;
 import org.cloudburstmc.server.level.Location;
 import org.cloudburstmc.server.level.storage.StorageIds;
+import org.cloudburstmc.server.registry.CloudGameRuleRegistry;
 import org.cloudburstmc.server.registry.CommandRegistry;
 import org.cloudburstmc.server.registry.EntityRegistry;
 import org.cloudburstmc.server.registry.GeneratorRegistry;
@@ -96,10 +97,12 @@ public class GenoaPlugin implements PluginContainer {
                     .load()
                     .get();
 
-            // We set these because of a bug causing the default game rules not to be applied
+            // Insert default rules
+            buildplateLevel.getGameRules().putAll(CloudGameRuleRegistry.get().getDefaultRules());
+
+            // Change a few to disable features
             buildplateLevel.getGameRules().put(GameRules.DO_DAYLIGHT_CYCLE, false);
             buildplateLevel.getGameRules().put(GameRules.DO_WEATHER_CYCLE, false);
-            buildplateLevel.getGameRules().put(GameRules.SHOW_COORDINATES, true);
 
 
             if (buildplate.getResult().getBuildplateData().getModel().getEntities() != null) {
@@ -123,18 +126,7 @@ public class GenoaPlugin implements PluginContainer {
 
     @Listener
     public void onJoin(PlayerJoinEvent event) {
-        // TODO: Cache if we have spawned the ents
-        if (event.getPlayer().getLevel().getGenerator().getClass() == BuildplateGenerator.class) {
-            if (buildplates.get(event.getPlayer().getLevel().getId()).getResult().getBuildplateData().getModel().getEntities() != null) {
-                for (BuildplateEntity entity : buildplates.get(event.getPlayer().getLevel().getId()).getResult().getBuildplateData().getModel().getEntities()) {
-                    Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), event.getPlayer().getLevel()));
-                    ent.setPosition(entity.getPosition());
-                    ent.setRotation(entity.getRotation().getX(), entity.getRotation().getY());
-                    logger.info("Spawning " + ent.getName() + " at " + entity.getPosition());
-                    ent.spawnToAll();
-                }
-            }
-        }
+        // TODO: Load the buildplate for the user or kick them
     }
 
     public static GenoaPlugin get() {
