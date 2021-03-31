@@ -34,12 +34,23 @@
     </repositories>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>org.cloudburstmc</groupId>-->
-<!--            <artifactId>cloudburst-server</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.cloudburstmc</groupId>-->
+        <!--            <artifactId>cloudburst-server</artifactId>-->
+        <!--            <version>0.0.1-SNAPSHOT</version>-->
+        <!--            <scope>provided</scope>-->
+        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.github.Project-Earth-Team.Protocol</groupId>
+            <artifactId>genoa-v425</artifactId>
+            <version>f20b15884b</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.nukkitx</groupId>
+                    <artifactId>nbt</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>com.github.CloudburstMC</groupId>
             <artifactId>Server</artifactId>

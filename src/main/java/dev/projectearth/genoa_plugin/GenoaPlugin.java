@@ -2,6 +2,7 @@ package dev.projectearth.genoa_plugin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import com.nukkitx.protocol.genoa.packet.GenoaItemParticlePacket;
 import dev.projectearth.genoa_plugin.commands.BuildplateCommand;
 import dev.projectearth.genoa_plugin.commands.SummonCommand;
 import dev.projectearth.genoa_plugin.commands.TestEntCommand;
@@ -14,6 +15,7 @@ import org.cloudburstmc.api.level.gamerule.GameRules;
 import org.cloudburstmc.api.plugin.PluginContainer;
 import org.cloudburstmc.server.CloudServer;
 import org.cloudburstmc.server.entity.Entity;
+import org.cloudburstmc.server.event.block.BlockBreakEvent;
 import org.cloudburstmc.server.level.Level;
 import org.cloudburstmc.server.level.Location;
 import org.cloudburstmc.server.level.storage.StorageIds;
@@ -29,7 +31,6 @@ import org.cloudburstmc.server.event.Listener;
 import org.cloudburstmc.server.event.player.PlayerJoinEvent;
 import org.cloudburstmc.server.event.server.ServerInitializationEvent;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -72,6 +73,17 @@ public class GenoaPlugin implements PluginContainer {
         CommandRegistry.get().register(this, new SummonCommand());
         GenoaEntityLoader.load();
         this.logger.info("Genoa plugin has loaded!");
+    }
+
+    @Listener
+    public void onBlockBreak(BlockBreakEvent event) {
+        GenoaItemParticlePacket packet = new GenoaItemParticlePacket();
+        packet.setPosition(event.getBlock().getPosition().toFloat().add(0.5, 0.5, 0.5));
+        packet.setParticleId(5); // TODO: Find out if 5 always works, or if we need multiple particles
+        packet.setDimensionId(1);
+        packet.setUniqueEntityId(event.getPlayer().getUniqueId());
+        event.getPlayer().sendPacket(packet);
+        //this.logger.info("Sent block breaking packet!");
     }
 
     public Level registerBuildplate(String buildplateId) {
@@ -133,7 +145,6 @@ public class GenoaPlugin implements PluginContainer {
         return INSTANCE;
     }
 
-    @Nonnull
     @Override
     public Object getPlugin() {
         return this;
