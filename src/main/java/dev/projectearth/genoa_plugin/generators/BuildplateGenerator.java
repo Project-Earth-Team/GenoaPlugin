@@ -26,7 +26,7 @@ public final class BuildplateGenerator implements Generator {
 
     @Override
     public void generate(PRandom random, IChunk chunk, int chunkX, int chunkZ) {
-        for (SubChunk subChunk : buildplate.getResult().getBuildplateData().getModel().getSubChunks()) {
+        for (SubChunk subChunk : buildplate.getBuildplateData().getModel().getSubChunks()) {
             if (subChunk.getPosition().getZ() == chunkX && subChunk.getPosition().getX() == chunkZ) {
                 for (int i = 0; i < subChunk.getBlocks().length; i++) {
                     PaletteBlock block = subChunk.getBlockPalette()[subChunk.getBlocks()[i]];

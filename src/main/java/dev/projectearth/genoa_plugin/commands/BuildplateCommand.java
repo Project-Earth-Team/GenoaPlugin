@@ -2,6 +2,7 @@ package dev.projectearth.genoa_plugin.commands;
 
 import com.nukkitx.protocol.bedrock.data.command.CommandParamType;
 import dev.projectearth.genoa_plugin.GenoaPlugin;
+import dev.projectearth.genoa_plugin.utils.BuildplateLoader;
 import org.cloudburstmc.server.CloudServer;
 import org.cloudburstmc.server.command.Command;
 import org.cloudburstmc.server.command.CommandSender;
@@ -41,7 +42,7 @@ public class BuildplateCommand extends Command {
             return false;
         }
 
-        Level buildplateLevel = GenoaPlugin.get().registerBuildplate(args[0]);
+        Level buildplateLevel = BuildplateLoader.registerBuildplate(args[0]);
 
         if (sender instanceof Player) {
             ((Player) sender).teleportImmediate(buildplateLevel.getSpawnLocation());

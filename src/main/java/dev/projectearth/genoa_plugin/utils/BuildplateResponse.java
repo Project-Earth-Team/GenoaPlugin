@@ -5,6 +5,8 @@ import lombok.Getter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class BuildplateResult {
-    private BuildplateData buildplateData;
+public class BuildplateResponse {
+    private Buildplate result;
 }
+
+
