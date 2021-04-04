@@ -1,12 +1,12 @@
 package dev.projectearth.genoa_plugin;
 
 import com.google.inject.Inject;
-//import com.nukkitx.protocol.genoa.packet.GenoaItemParticlePacket;
+import com.nukkitx.protocol.genoa.packet.GenoaItemParticlePacket;
 import dev.projectearth.genoa_plugin.commands.BuildplateCommand;
 import dev.projectearth.genoa_plugin.commands.SummonCommand;
 import dev.projectearth.genoa_plugin.commands.TestEntCommand;
 import dev.projectearth.genoa_plugin.entities.GenoaEntityLoader;
-import dev.projectearth.genoa_plugin.generators.BuildplateGenerator;
+import dev.projectearth.genoa_plugin.generators.VoidGenerator;
 import dev.projectearth.genoa_plugin.providers.JsonLevelProvider;
 import dev.projectearth.genoa_plugin.providers.JsonLevelProviderFactory;
 import dev.projectearth.genoa_plugin.utils.Buildplate;
@@ -56,7 +56,7 @@ public class GenoaPlugin implements PluginContainer {
     @Listener
     public void onInitialization(ServerInitializationEvent event) {
         this.logger.info("Genoa plugin loading...");
-        GeneratorRegistry.get().register(BuildplateGenerator.ID, BuildplateGenerator::new, 0);
+        GeneratorRegistry.get().register(VoidGenerator.ID, VoidGenerator::new, 0);
         StorageRegistry.get().register(JsonLevelProvider.ID, JsonLevelProviderFactory.INSTANCE, 0);
         CommandRegistry.get().register(this, new BuildplateCommand());
         CommandRegistry.get().register(this, new TestEntCommand());
@@ -65,16 +65,16 @@ public class GenoaPlugin implements PluginContainer {
         this.logger.info("Genoa plugin has loaded!");
     }
 
-//    @Listener
-//    public void onBlockBreak(BlockBreakEvent event) {
-//        GenoaItemParticlePacket packet = new GenoaItemParticlePacket();
-//        packet.setPosition(event.getBlock().getPosition().toFloat().add(0.5, 0.5, 0.5));
-//        packet.setParticleId(5); // TODO: Find out if 5 always works, or if we need multiple particles
-//        packet.setDimensionId(1);
-//        packet.setUniqueEntityId(event.getPlayer().getUniqueId());
-//        event.getPlayer().sendPacket(packet);
-//        //this.logger.info("Sent block breaking packet!");
-//    }
+    @Listener
+    public void onBlockBreak(BlockBreakEvent event) {
+        GenoaItemParticlePacket packet = new GenoaItemParticlePacket();
+        packet.setPosition(event.getBlock().getPosition().toFloat().add(0.5, 0.5, 0.5));
+        packet.setParticleId(5); // TODO: Find out if 5 always works, or if we need multiple particles
+        packet.setDimensionId(1);
+        packet.setUniqueEntityId(event.getPlayer().getUniqueId());
+        event.getPlayer().sendPacket(packet);
+        //this.logger.info("Sent block breaking packet!");
+    }
 
     @Listener
     public void onJoin(PlayerJoinEvent event) {

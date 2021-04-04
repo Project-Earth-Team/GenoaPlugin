@@ -8,6 +8,7 @@ import org.cloudburstmc.server.command.Command;
 import org.cloudburstmc.server.command.CommandSender;
 import org.cloudburstmc.server.command.data.CommandData;
 import org.cloudburstmc.server.command.data.CommandParameter;
+import org.cloudburstmc.server.event.player.PlayerTeleportEvent;
 import org.cloudburstmc.server.level.Level;
 import org.cloudburstmc.server.locale.TranslationContainer;
 import org.cloudburstmc.server.player.Player;
@@ -45,10 +46,10 @@ public class BuildplateCommand extends Command {
         Level buildplateLevel = BuildplateLoader.registerBuildplate(args[0]);
 
         if (sender instanceof Player) {
-            ((Player) sender).teleportImmediate(buildplateLevel.getSpawnLocation());
+            ((Player) sender).teleportImmediate(buildplateLevel.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
         } else {
             for (Player player : CloudServer.getInstance().getOnlinePlayers().values()) {
-                player.teleportImmediate(buildplateLevel.getSpawnLocation());
+                player.teleportImmediate(buildplateLevel.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
             }
         }
 

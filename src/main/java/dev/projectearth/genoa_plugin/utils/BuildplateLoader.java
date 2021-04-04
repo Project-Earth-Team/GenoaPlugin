@@ -2,15 +2,13 @@ package dev.projectearth.genoa_plugin.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.projectearth.genoa_plugin.GenoaPlugin;
-import dev.projectearth.genoa_plugin.generators.BuildplateGenerator;
+import dev.projectearth.genoa_plugin.generators.VoidGenerator;
 import dev.projectearth.genoa_plugin.providers.JsonLevelProvider;
 import org.cloudburstmc.api.level.gamerule.GameRules;
 import org.cloudburstmc.server.CloudServer;
 import org.cloudburstmc.server.entity.Entity;
 import org.cloudburstmc.server.level.Level;
 import org.cloudburstmc.server.level.Location;
-import org.cloudburstmc.server.level.generator.impl.VoidGenerator;
-import org.cloudburstmc.server.level.storage.StorageIds;
 import org.cloudburstmc.server.registry.CloudGameRuleRegistry;
 import org.cloudburstmc.server.registry.EntityRegistry;
 import org.cloudburstmc.server.utils.Identifier;
@@ -39,9 +37,6 @@ public class BuildplateLoader {
             Level buildplateLevel = CloudServer.getInstance().loadLevel()
                     .id(buildplateId)
                     .seed(0)
-//                    .generator(BuildplateGenerator.ID)
-//                    .generatorOptions(buildplateId)
-//                    .storage(StorageIds.LEVELDB)
                     .generator(VoidGenerator.ID)
                     .storage(JsonLevelProvider.ID)
                     .load()

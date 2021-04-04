@@ -56,23 +56,23 @@ public class JsonLevelProvider implements LevelProvider {
     @Override
     public CompletableFuture<Chunk> readChunk(ChunkBuilder chunkBuilder) {
         return CompletableFuture.supplyAsync(() -> {
-            List<ChunkSection> chunkSections = new ArrayList<>();
+            ChunkSection[] chunkSections = new ChunkSection[16];
 
             for (SubChunk subChunk : buildplate.getBuildplateData().getModel().getSubChunks()) {
                 if (subChunk.getPosition().getZ() == chunkBuilder.getX() && subChunk.getPosition().getX() == chunkBuilder.getZ()) {
                     ChunkSection chunkSection = new ChunkSection();
 
-                    for (int i = subChunk.getBlocks().length - 1; i >= 0; i--) {
+                    for (int i = 0; i < subChunk.getBlocks().length; i++) {
                         PaletteBlock block = subChunk.getBlockPalette()[subChunk.getBlocks()[i]];
                         Vector3i pos = to3D(i);//.add(0, subChunk.getPosition().getY() * 16, 0);
                         chunkSection.setBlock(pos.getX(), pos.getY(), pos.getZ(), 0, block.getState());
                     }
 
-                    chunkSections.add(chunkSection);
+                    chunkSections[subChunk.getPosition().getY()] = chunkSection;
                 }
             }
 
-            chunkBuilder.sections(chunkSections.toArray(new ChunkSection[0]));
+            chunkBuilder.sections(chunkSections);
 
             int[] heights = new int[512];
             Arrays.fill(heights, 256);
