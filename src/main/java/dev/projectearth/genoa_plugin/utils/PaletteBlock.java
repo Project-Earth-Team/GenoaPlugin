@@ -2,12 +2,11 @@ package dev.projectearth.genoa_plugin.utils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.cloudburstmc.server.block.BlockPalette;
 import org.cloudburstmc.server.block.BlockState;
+import org.cloudburstmc.server.block.util.BlockStateMetaMappings;
 import org.cloudburstmc.server.registry.BlockRegistry;
 import org.cloudburstmc.server.utils.Identifier;
 
@@ -37,7 +36,6 @@ public class PaletteBlock {
     }
 
     public static PaletteBlock from(BlockState block) {
-        // TODO: fix the data/meta
-        return new PaletteBlock(block.getId().toString(), BlockPalette.INSTANCE.getSerialized(block).getShort("val"));
+        return new PaletteBlock(block.getId().toString(), BlockStateMetaMappings.getMetaFromState(block));
     }
 }
