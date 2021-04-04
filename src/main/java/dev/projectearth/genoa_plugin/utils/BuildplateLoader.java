@@ -49,7 +49,6 @@ public class BuildplateLoader {
             buildplateLevel.getGameRules().put(GameRules.DO_DAYLIGHT_CYCLE, false);
             buildplateLevel.getGameRules().put(GameRules.DO_WEATHER_CYCLE, false);
 
-
             if (buildplateResponse.getResult().getBuildplateData().getModel().getEntities() != null) {
                 for (BuildplateEntity entity : buildplateResponse.getResult().getBuildplateData().getModel().getEntities()) {
                     Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), buildplateLevel));

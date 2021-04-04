@@ -1,5 +1,6 @@
 package dev.projectearth.genoa_plugin.providers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nukkitx.math.vector.Vector3i;
 import dev.projectearth.genoa_plugin.GenoaPlugin;
@@ -88,7 +89,44 @@ public class JsonLevelProvider implements LevelProvider {
 
     @Override
     public CompletableFuture<Void> saveChunk(Chunk chunk) {
-        return CompletableFuture.runAsync(() -> {}, this.executor);
+        return CompletableFuture.runAsync(() -> {
+            for (int subChunkY = 0; subChunkY < chunk.getSections().length; subChunkY++) {
+                ChunkSection section = chunk.getSection(subChunkY);
+
+                if (section == null || section.isEmpty()) {
+                    continue;
+                }
+
+                SubChunk subChunk = new SubChunk();
+                subChunk.setPosition(Vector3i.from(chunk.getX(), subChunkY, chunk.getZ()));
+                List<PaletteBlock> paletteBlocks = new ArrayList<>();
+                int[] blocks = new int[16 * 16 * 16];
+
+                for (int x = 0; x < 16; x++) {
+                    for (int z = 0; z < 16; z++) {
+                        for (int y = 0; y < 16; y++) {
+                            PaletteBlock block = PaletteBlock.from(section.getBlock(x, y, z, 0));
+
+                            int stateIndex = paletteBlocks.indexOf(block);
+                            if (stateIndex == -1) {
+                                stateIndex = paletteBlocks.size();
+                                paletteBlocks.add(block);
+                            }
+
+                            blocks[from3D(x, y, z)] = stateIndex;
+                        }
+                    }
+                }
+
+                subChunk.setBlocks(blocks);
+                subChunk.setBlockPalette(paletteBlocks.toArray(new PaletteBlock[0]));
+                try {
+                    System.out.println(OBJECT_MAPPER.writeValueAsString(subChunk));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, this.executor);
     }
 
     @Override
@@ -116,5 +154,9 @@ public class JsonLevelProvider implements LevelProvider {
         int y = (int) Math.floor((index / 16f) % 16f);
         int z = (int) Math.floor(index / (16f * 16f));
         return Vector3i.from(x, y, z);
+    }
+
+    private static int from3D(int x, int y, int z) {
+        return x + 16 * (y + 16 * z);
     }
 }

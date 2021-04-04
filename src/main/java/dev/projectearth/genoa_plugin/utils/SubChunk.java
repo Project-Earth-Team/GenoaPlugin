@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.nukkitx.math.vector.Vector3i;
 import dev.projectearth.genoa_plugin.deserializers.Vector3iDeserializer;
 import lombok.Getter;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
+@Setter
 public class SubChunk {
     @JsonProperty("block_palette")
     private PaletteBlock[] blockPalette;
