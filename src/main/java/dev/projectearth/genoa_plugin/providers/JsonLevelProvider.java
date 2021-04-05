@@ -4,15 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nukkitx.math.vector.Vector3i;
 import dev.projectearth.genoa_plugin.GenoaPlugin;
-import dev.projectearth.genoa_plugin.utils.Buildplate;
-import dev.projectearth.genoa_plugin.utils.BuildplateResponse;
-import dev.projectearth.genoa_plugin.utils.PaletteBlock;
-import dev.projectearth.genoa_plugin.utils.SubChunk;
+import dev.projectearth.genoa_plugin.utils.*;
+import org.cloudburstmc.api.level.gamerule.GameRules;
+import org.cloudburstmc.server.entity.Entity;
 import org.cloudburstmc.server.level.LevelData;
+import org.cloudburstmc.server.level.Location;
 import org.cloudburstmc.server.level.chunk.Chunk;
 import org.cloudburstmc.server.level.chunk.ChunkBuilder;
 import org.cloudburstmc.server.level.chunk.ChunkSection;
 import org.cloudburstmc.server.level.provider.LevelProvider;
+import org.cloudburstmc.server.registry.CloudGameRuleRegistry;
+import org.cloudburstmc.server.registry.EntityRegistry;
 import org.cloudburstmc.server.utils.Identifier;
 import org.cloudburstmc.server.utils.LoadState;
 
@@ -72,6 +74,19 @@ public class JsonLevelProvider implements LevelProvider {
                     chunkSections[subChunk.getPosition().getY()] = chunkSection;
                 }
             }
+
+            List<BuildplateEntity> entities = new ArrayList<>();
+
+            int rawX = chunkBuilder.getX() * 16;
+            int rawZ = chunkBuilder.getZ() * 16;
+            for (BuildplateEntity entity : buildplate.getBuildplateData().getModel().getEntities()) {
+                if (entity.getPosition().getX() >= rawX && rawX < entity.getPosition().getX() + 16
+                    && entity.getPosition().getZ() >= rawZ && rawZ < entity.getPosition().getZ() + 16) {
+                    entities.add(entity);
+                }
+            }
+
+            chunkBuilder.dataLoader(new EntityDataLoader(entities));
 
             chunkBuilder.sections(chunkSections);
 
@@ -136,7 +151,22 @@ public class JsonLevelProvider implements LevelProvider {
 
     @Override
     public CompletableFuture<LoadState> loadLevelData(LevelData levelData) {
-        return CompletableFuture.supplyAsync(() -> LoadState.LOADED, this.executor);
+        return CompletableFuture.supplyAsync(() -> {
+            // Insert default rules
+            levelData.getGameRules().putAll(CloudGameRuleRegistry.get().getDefaultRules());
+
+            // Change a few to disable features
+            levelData.getGameRules().put(GameRules.DO_DAYLIGHT_CYCLE, false);
+            levelData.getGameRules().put(GameRules.DO_WEATHER_CYCLE, false);
+
+            // Set the time
+            levelData.setTime(buildplate.getBuildplateData().getModel().isNight() ? 18000L : 6000L);
+
+            // Set the spawn
+            levelData.setSpawn(buildplate.getBuildplateData().getOffset());
+
+            return LoadState.LOADED;
+        }, this.executor);
     }
 
     @Override

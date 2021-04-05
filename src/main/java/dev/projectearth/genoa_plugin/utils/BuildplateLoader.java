@@ -42,24 +42,6 @@ public class BuildplateLoader {
                     .load()
                     .get();
 
-            // Insert default rules
-            buildplateLevel.getGameRules().putAll(CloudGameRuleRegistry.get().getDefaultRules());
-
-            // Change a few to disable features
-            buildplateLevel.getGameRules().put(GameRules.DO_DAYLIGHT_CYCLE, false);
-            buildplateLevel.getGameRules().put(GameRules.DO_WEATHER_CYCLE, false);
-
-            if (buildplateResponse.getResult().getBuildplateData().getModel().getEntities() != null) {
-                for (BuildplateEntity entity : buildplateResponse.getResult().getBuildplateData().getModel().getEntities()) {
-                    Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), buildplateLevel));
-                    ent.setPosition(entity.getPosition());
-                    ent.setRotation(entity.getRotation().getX(), entity.getRotation().getY());
-                    GenoaPlugin.get().getLogger().info("Spawning " + ent.getName() + " at " + entity.getPosition() + " for buildplate " + buildplateId);
-                    //ent.spawnToAll();
-                    buildplateLevel.addEntity(ent);
-                }
-            }
-
             return buildplateLevel;
         } catch (InterruptedException | ExecutionException | IOException e) {
             GenoaPlugin.get().getLogger().error("Something went wrong loading buildplate '" + buildplateId + "':", e);
