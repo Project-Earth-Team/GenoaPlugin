@@ -36,6 +36,10 @@ public class PaletteBlock {
     }
 
     public static PaletteBlock from(BlockState block) {
-        return new PaletteBlock(block.getId().toString(), BlockStateMetaMappings.getMetaFromState(block));
+        int data = BlockStateMetaMappings.getMetaFromState(block);
+        if (data == -1) {
+            data = 0;
+        }
+        return new PaletteBlock(block.getId().toString(), data);
     }
 }

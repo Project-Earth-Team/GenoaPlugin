@@ -1,20 +1,16 @@
 package dev.projectearth.genoa_plugin.providers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nukkitx.math.vector.Vector3i;
 import dev.projectearth.genoa_plugin.GenoaPlugin;
 import dev.projectearth.genoa_plugin.utils.*;
 import org.cloudburstmc.api.level.gamerule.GameRules;
-import org.cloudburstmc.server.entity.Entity;
 import org.cloudburstmc.server.level.LevelData;
-import org.cloudburstmc.server.level.Location;
 import org.cloudburstmc.server.level.chunk.Chunk;
 import org.cloudburstmc.server.level.chunk.ChunkBuilder;
 import org.cloudburstmc.server.level.chunk.ChunkSection;
 import org.cloudburstmc.server.level.provider.LevelProvider;
 import org.cloudburstmc.server.registry.CloudGameRuleRegistry;
-import org.cloudburstmc.server.registry.EntityRegistry;
 import org.cloudburstmc.server.utils.Identifier;
 import org.cloudburstmc.server.utils.LoadState;
 
@@ -32,9 +28,9 @@ public class JsonLevelProvider implements LevelProvider {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private String levelId;
-    private Path levelsPath;
-    private Executor executor;
+    private final String levelId;
+    private final Path levelsPath;
+    private final Executor executor;
     private Buildplate buildplate;
 
     public JsonLevelProvider(String levelId, Path levelsPath, Executor executor) {
@@ -86,6 +82,7 @@ public class JsonLevelProvider implements LevelProvider {
                 }
             }
 
+            // TODO: Work out why this is called a tonne
             chunkBuilder.dataLoader(new EntityDataLoader(entities));
 
             chunkBuilder.sections(chunkSections);
@@ -113,7 +110,7 @@ public class JsonLevelProvider implements LevelProvider {
                 }
 
                 SubChunk subChunk = new SubChunk();
-                subChunk.setPosition(Vector3i.from(chunk.getX(), subChunkY, chunk.getZ()));
+                subChunk.setPosition(Vector3i.from(chunk.getZ(), subChunkY, chunk.getX()));
                 List<PaletteBlock> paletteBlocks = new ArrayList<>();
                 int[] blocks = new int[16 * 16 * 16];
 
@@ -135,12 +132,28 @@ public class JsonLevelProvider implements LevelProvider {
 
                 subChunk.setBlocks(blocks);
                 subChunk.setBlockPalette(paletteBlocks.toArray(new PaletteBlock[0]));
-                try {
-                    System.out.println(OBJECT_MAPPER.writeValueAsString(subChunk));
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+
+                // Replace the sub chunk in the array
+                boolean replaced = false;
+                for (int i = 0; i < buildplate.getBuildplateData().getModel().getSubChunks().length; i++) {
+                    SubChunk tmpSubChunk = buildplate.getBuildplateData().getModel().getSubChunks()[i];
+                    if (tmpSubChunk.getPosition().equals(subChunk.getPosition())) {
+                        buildplate.getBuildplateData().getModel().getSubChunks()[i] = subChunk;
+                        replaced = true;
+                        break;
+                    }
+                }
+
+                // Expand the array and insert the new sub chunk
+                if (!replaced) {
+                    SubChunk[] newSubChunks = new SubChunk[buildplate.getBuildplateData().getModel().getSubChunks().length + 1];
+                    System.arraycopy(buildplate.getBuildplateData().getModel().getSubChunks(), 0, newSubChunks, 0, buildplate.getBuildplateData().getModel().getSubChunks().length);
+                    newSubChunks[newSubChunks.length - 1] = subChunk;
+                    buildplate.getBuildplateData().getModel().setSubChunks(newSubChunks);
                 }
             }
+
+            System.out.println("Saved chunk: " + chunk.getX() + ", " + chunk.getZ());
         }, this.executor);
     }
 
@@ -176,7 +189,11 @@ public class JsonLevelProvider implements LevelProvider {
 
     @Override
     public void close() throws IOException {
+        BuildplateResponse response = new BuildplateResponse();
+        response.setResult(buildplate);
 
+        OBJECT_MAPPER.writeValue(levelsPath.resolve(levelId + ".json").toFile(), response);
+        System.out.println("Saved " + levelId + ".json");
     }
 
     private static Vector3i to3D(int index) {

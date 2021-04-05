@@ -1,7 +1,6 @@
 package dev.projectearth.genoa_plugin.commands;
 
 import com.nukkitx.protocol.bedrock.data.command.CommandParamType;
-import dev.projectearth.genoa_plugin.GenoaPlugin;
 import dev.projectearth.genoa_plugin.utils.BuildplateLoader;
 import org.cloudburstmc.server.CloudServer;
 import org.cloudburstmc.server.command.Command;
@@ -10,9 +9,7 @@ import org.cloudburstmc.server.command.data.CommandData;
 import org.cloudburstmc.server.command.data.CommandParameter;
 import org.cloudburstmc.server.event.player.PlayerTeleportEvent;
 import org.cloudburstmc.server.level.Level;
-import org.cloudburstmc.server.locale.TranslationContainer;
 import org.cloudburstmc.server.player.Player;
-import org.cloudburstmc.server.utils.TextFormat;
 
 
 /**

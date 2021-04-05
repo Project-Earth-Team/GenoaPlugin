@@ -1,10 +1,7 @@
 package dev.projectearth.genoa_plugin.commands;
 
 import com.nukkitx.protocol.bedrock.data.command.CommandParamType;
-import com.nukkitx.protocol.bedrock.data.entity.EntityData;
-import com.nukkitx.protocol.bedrock.data.entity.EntityFlag;
 import dev.projectearth.genoa_plugin.GenoaPlugin;
-import dev.projectearth.genoa_plugin.entities.GenoaEntityTypes;
 import org.cloudburstmc.server.command.Command;
 import org.cloudburstmc.server.command.CommandSender;
 import org.cloudburstmc.server.command.data.CommandData;
@@ -15,10 +12,6 @@ import org.cloudburstmc.server.level.Location;
 import org.cloudburstmc.server.player.Player;
 import org.cloudburstmc.server.registry.EntityRegistry;
 import org.cloudburstmc.server.utils.Identifier;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

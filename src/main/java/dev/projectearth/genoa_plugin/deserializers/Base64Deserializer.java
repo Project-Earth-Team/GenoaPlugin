@@ -25,7 +25,7 @@ public class Base64Deserializer extends JsonDeserializer<Object> implements Cont
     }
 
     @Override
-    public Object deserialize(JsonParser parser, DeserializationContext context) throws IOException, JsonProcessingException {
+    public Object deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         String value = parser.getValueAsString();
         Base64.Decoder decoder = Base64.getDecoder();
 

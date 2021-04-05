@@ -41,7 +41,7 @@ public class GenoaPlugin implements PluginContainer {
     private final CloudServer server;
 
     @Getter
-    private Map<String, Buildplate> buildplates = new HashMap<>();
+    private final Map<String, Buildplate> buildplates = new HashMap<>();
 
     @Inject
     private GenoaPlugin(Logger logger, PluginDescription description, Path dataDirectory) {

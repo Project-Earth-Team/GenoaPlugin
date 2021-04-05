@@ -5,18 +5,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.nukkitx.math.vector.Vector2f;
+import com.nukkitx.math.vector.Vector2i;
 
 import java.io.IOException;
 
 /**
- * Deserializer for Jackson json to create {@link Vector2f}
+ * Deserializer for Jackson json to create {@link Vector2i}
  */
-public class Vector2fDeserializer extends JsonDeserializer<Vector2f> {
+public class Vector2iDeserializer extends JsonDeserializer<Vector2i> {
 
     @Override
-    public Vector2f deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    public Vector2i deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         JsonNode node = parser.getCodec().readTree(parser);
-        return Vector2f.from(node.get("x").asDouble(), node.get("y").asDouble());
+        return Vector2i.from(node.get("x").asInt(), node.get("z").asInt());
     }
 }

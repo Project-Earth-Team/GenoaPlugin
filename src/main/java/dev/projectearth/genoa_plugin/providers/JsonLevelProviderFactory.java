@@ -13,7 +13,7 @@ public class JsonLevelProviderFactory implements LevelProviderFactory {
     public static final JsonLevelProviderFactory INSTANCE = new JsonLevelProviderFactory();
 
     @Override
-    public LevelProvider create(String levelId, Path levelsPath, Executor executor) throws IOException {
+    public LevelProvider create(String levelId, Path levelsPath, Executor executor) {
         return new JsonLevelProvider(levelId, levelsPath, executor);
     }
 
