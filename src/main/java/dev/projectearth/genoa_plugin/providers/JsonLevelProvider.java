@@ -75,10 +75,12 @@ public class JsonLevelProvider implements LevelProvider {
 
             int rawX = chunkBuilder.getX() * 16;
             int rawZ = chunkBuilder.getZ() * 16;
-            for (BuildplateEntity entity : buildplate.getBuildplateData().getModel().getEntities()) {
-                if (entity.getPosition().getX() >= rawX && rawX < entity.getPosition().getX() + 16
-                    && entity.getPosition().getZ() >= rawZ && rawZ < entity.getPosition().getZ() + 16) {
-                    entities.add(entity);
+            if (buildplate.getBuildplateData().getModel().getEntities() != null) {
+                for (BuildplateEntity entity : buildplate.getBuildplateData().getModel().getEntities()) {
+                    if (entity.getPosition().getX() >= rawX && rawX < entity.getPosition().getX() + 16
+                            && entity.getPosition().getZ() >= rawZ && rawZ < entity.getPosition().getZ() + 16) {
+                        entities.add(entity);
+                    }
                 }
             }
 

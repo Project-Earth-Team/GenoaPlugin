@@ -51,10 +51,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>com.github.CloudburstMC</groupId>
             <artifactId>Server</artifactId>
             <version>protocol-update-1e48b9ba80-1</version>
+        </dependency> -->
+        <dependency>
+            <groupId>com.github.Project-Earth-Team</groupId>
+            <artifactId>Server</artifactId>
+            <version>235c40c2f8</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
