@@ -22,6 +22,16 @@ pipeline {
                 }
             }
         }
+        stage ('Deploy') {
+            when {
+                branch "master"
+            }
+            steps {
+                withMaven(globalMavenSettingsConfig: 'artifactory-credentials', maven: 'Maven 3') {
+                    sh 'mvn deploy'
+                }
+            }
+        }
     }
 
     post {

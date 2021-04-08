@@ -69,6 +69,19 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>rtm516-releases</name>
+            <url>https://repo.rtm516.co.uk/artifactory/maven</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>rtm516-snapshots</name>
+            <url>https://repo.rtm516.co.uk/artifactory/maven</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <finalName>${outputName}</finalName>
         <defaultGoal>clean package</defaultGoal>
