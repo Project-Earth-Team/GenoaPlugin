@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BuildplateModel {
-    private Object[] blockEntities;
+    private BuildplateBlockEntity[] blockEntities;
     private BuildplateEntity[] entities;
     @JsonProperty("format_version")
     private int formatVersion;

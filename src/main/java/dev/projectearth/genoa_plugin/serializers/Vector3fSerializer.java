@@ -15,9 +15,9 @@ public class Vector3fSerializer extends JsonSerializer<Vector3f> {
     @Override
     public void serialize(Vector3f vector3f, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeNumberField("x", vector3f.getX());
+        jsonGenerator.writeNumberField("x", vector3f.getZ());
         jsonGenerator.writeNumberField("y", vector3f.getY());
-        jsonGenerator.writeNumberField("z", vector3f.getZ());
+        jsonGenerator.writeNumberField("z", vector3f.getX());
         jsonGenerator.writeEndObject();
     }
 }

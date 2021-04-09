@@ -1,10 +1,13 @@
 package dev.projectearth.genoa_plugin.providers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nukkitx.math.vector.Vector2f;
 import com.nukkitx.math.vector.Vector3i;
 import dev.projectearth.genoa_plugin.GenoaPlugin;
 import dev.projectearth.genoa_plugin.utils.*;
 import org.cloudburstmc.api.level.gamerule.GameRules;
+import org.cloudburstmc.server.CloudServer;
+import org.cloudburstmc.server.entity.Entity;
 import org.cloudburstmc.server.level.LevelData;
 import org.cloudburstmc.server.level.chunk.Chunk;
 import org.cloudburstmc.server.level.chunk.ChunkBuilder;
@@ -58,7 +61,7 @@ public class JsonLevelProvider implements LevelProvider {
             ChunkSection[] chunkSections = new ChunkSection[16];
 
             for (SubChunk subChunk : buildplate.getBuildplateData().getModel().getSubChunks()) {
-                if (subChunk.getPosition().getZ() == chunkBuilder.getX() && subChunk.getPosition().getX() == chunkBuilder.getZ()) {
+                if (subChunk.getPosition().getX() == chunkBuilder.getX() && subChunk.getPosition().getZ() == chunkBuilder.getZ()) {
                     ChunkSection chunkSection = new ChunkSection();
 
                     for (int i = 0; i < subChunk.getBlocks().length; i++) {
@@ -77,14 +80,13 @@ public class JsonLevelProvider implements LevelProvider {
             int rawZ = chunkBuilder.getZ() * 16;
             if (buildplate.getBuildplateData().getModel().getEntities() != null) {
                 for (BuildplateEntity entity : buildplate.getBuildplateData().getModel().getEntities()) {
-                    if (entity.getPosition().getX() >= rawX && rawX < entity.getPosition().getX() + 16
-                            && entity.getPosition().getZ() >= rawZ && rawZ < entity.getPosition().getZ() + 16) {
+                    if (entity.getPosition().getX() >= rawX && rawX + 16 > entity.getPosition().getX()
+                            && entity.getPosition().getZ() >= rawZ && rawZ + 16 > entity.getPosition().getZ()) {
                         entities.add(entity);
                     }
                 }
             }
 
-            // TODO: Work out why this is called a tonne
             chunkBuilder.dataLoader(new EntityDataLoader(entities));
 
             chunkBuilder.sections(chunkSections);
@@ -112,7 +114,7 @@ public class JsonLevelProvider implements LevelProvider {
                 }
 
                 SubChunk subChunk = new SubChunk();
-                subChunk.setPosition(Vector3i.from(chunk.getZ(), subChunkY, chunk.getX()));
+                subChunk.setPosition(Vector3i.from(chunk.getX(), subChunkY, chunk.getZ()));
                 List<PaletteBlock> paletteBlocks = new ArrayList<>();
                 int[] blocks = new int[16 * 16 * 16];
 
@@ -191,6 +193,17 @@ public class JsonLevelProvider implements LevelProvider {
 
     @Override
     public void close() throws IOException {
+        List<BuildplateEntity> entities = new ArrayList<>();
+        for (Entity entity : CloudServer.getInstance().getLevel(levelId).getEntities()) {
+            BuildplateEntity buildplateEntity = new BuildplateEntity();
+            buildplateEntity.setName(entity.getType().getIdentifier().toString());
+            buildplateEntity.setPosition(entity.getPosition());
+            buildplateEntity.setRotation(Vector2f.from(entity.getYaw(), entity.getPitch()));
+            entities.add(buildplateEntity);
+        }
+
+//        buildplate.getBuildplateData().getModel().setEntities(entities.toArray(new BuildplateEntity[0]));
+
         BuildplateResponse response = new BuildplateResponse();
         response.setResult(buildplate);
 
