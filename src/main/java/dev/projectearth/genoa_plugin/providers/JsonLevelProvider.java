@@ -61,13 +61,13 @@ public class JsonLevelProvider implements LevelProvider {
             ChunkSection[] chunkSections = new ChunkSection[16];
 
             for (SubChunk subChunk : buildplate.getBuildplateData().getModel().getSubChunks()) {
-                if (subChunk.getPosition().getX() == chunkBuilder.getX() && -subChunk.getPosition().getZ() - 1 == chunkBuilder.getZ()) { // Ajust the z pos to mirror the subchunk
+                if (subChunk.getPosition().getZ() == chunkBuilder.getX() && subChunk.getPosition().getX() == chunkBuilder.getZ()) {
                     ChunkSection chunkSection = new ChunkSection();
 
                     for (int i = 0; i < subChunk.getBlocks().length; i++) {
                         PaletteBlock block = subChunk.getBlockPalette()[subChunk.getBlocks()[i]];
                         Vector3i pos = to3D(i);
-                        chunkSection.setBlock(pos.getX(), pos.getY(), 15 - pos.getZ(), 0, block.getState()); // Mirror the block position
+                        chunkSection.setBlock(pos.getZ(), pos.getY(), pos.getX(), 0, block.getState());
                     }
 
                     chunkSections[subChunk.getPosition().getY()] = chunkSection;
@@ -219,6 +219,6 @@ public class JsonLevelProvider implements LevelProvider {
     }
 
     private static int from3D(int x, int y, int z) {
-        return x + 16 * (y + 16 * z);
+        return z + y * 16 + x * 256;
     }
 }

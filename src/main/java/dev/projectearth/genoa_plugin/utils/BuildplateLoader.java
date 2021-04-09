@@ -17,7 +17,7 @@ public class BuildplateLoader {
     public static Level registerBuildplate(String buildplateId) {
         try {
             GenoaPlugin.get().getLogger().info("Downloading buildplate " + buildplateId + "...");
-            File buildplateFile = new File(buildplateId + ".json");
+            File buildplateFile = new File(CloudServer.getInstance().getFilePath() + "/worlds/" + buildplateId + ".json");
             if (!buildplateFile.exists()) {
                 // TODO: Download from server
                 return null;
