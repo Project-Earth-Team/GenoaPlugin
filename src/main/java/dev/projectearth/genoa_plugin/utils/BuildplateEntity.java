@@ -12,12 +12,14 @@ import dev.projectearth.genoa_plugin.serializers.Vector3fSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 public class BuildplateEntity {
     private int changeColor = -1;
-    private Object extraData = null;
+    private Map<String, Object> extraData = null;
     private boolean isPersonaSkin = false;
     private int multiplicitiveTintChangeColor = -1;
     private String name;

@@ -198,6 +198,8 @@ public class JsonLevelProvider implements LevelProvider {
             BuildplateEntity buildplateEntity = new BuildplateEntity();
             buildplateEntity.setName(entity.getType().getIdentifier().toString());
             buildplateEntity.setPosition(entity.getPosition());
+            buildplateEntity.setShadowPosition(entity.getPosition());
+            buildplateEntity.setShadowSize(entity.getWidth());
             buildplateEntity.setRotation(Vector2f.from(entity.getYaw(), entity.getPitch()));
             entities.add(buildplateEntity);
         }
