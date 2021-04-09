@@ -17,6 +17,6 @@ public class Vector3fDeserializer extends JsonDeserializer<Vector3f> {
     @Override
     public Vector3f deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         JsonNode node = parser.getCodec().readTree(parser);
-        return Vector3f.from(node.get("z").asDouble(), node.get("y").asDouble(), node.get("x").asDouble());
+        return Vector3f.from(node.get("x").asDouble(), node.get("y").asDouble(), node.get("z").asDouble());
     }
 }

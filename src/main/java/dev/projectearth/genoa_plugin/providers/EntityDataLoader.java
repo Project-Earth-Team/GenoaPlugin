@@ -23,7 +23,7 @@ public class EntityDataLoader implements ChunkDataLoader {
         for (BuildplateEntity entity : entities) {
             try {
                 Entity ent = EntityRegistry.get().newEntity(EntityRegistry.get().getEntityType(Identifier.fromString(entity.getName())), Location.from(entity.getPosition(), chunk.getLevel()));
-                ent.setPosition(entity.getPosition().mul(1, 1, -1)); // This is altered to correct the position on the mirrored chunks
+                ent.setPosition(entity.getPosition());
                 ent.setRotation(entity.getRotation().getX(), entity.getRotation().getY());
                 ent.getData().setByte(EntityData.COLOR, MobColor.fromColorCode(entity.getChangeColor()).getBedrockID());
                 GenoaPlugin.get().getLogger().info("Spawning " + ent.getName() + " at " + entity.getPosition() + " for level " + chunk.getLevel().getId());
